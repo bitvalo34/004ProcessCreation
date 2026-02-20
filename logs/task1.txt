@@ -1,0 +1,5 @@
+[task1] Parent starting. PID=26416
+[task1] Parent after fork. MyPID=26416 ChildPID=26418
+[task1] Child here.  PID=26418  PPID=26416
+[task1] Parent done (not waiting in task1).
+[task1] Child done.

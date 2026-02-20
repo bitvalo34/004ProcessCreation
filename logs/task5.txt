@@ -1,0 +1,4 @@
+[task5] Created shared memory. shmid=7
+[task5] Parent wrote message.
+[task5] Child read: "Shared hello from parent (task5)."
+[task5] Parent marked segment for deletion.

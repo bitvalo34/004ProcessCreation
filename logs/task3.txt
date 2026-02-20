@@ -1,0 +1,3 @@
+[task3] Parent sent 26 bytes.
+[task3] Child received (26 bytes): Hello from parent (task3).
+[task3] Parent done.

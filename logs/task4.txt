@@ -1,0 +1,11 @@
+[task4] Parent PID=26431 creating 3 children...
+[task4] Child #0 started. PID=26433 PPID=26431
+[task4] Child #1 started. PID=26434 PPID=26431
+[task4] Child #2 started. PID=26435 PPID=26431
+[task4] Child #0 done.
+[task4] Reaped child PID=26433 exit_code=10
+[task4] Child #1 done.
+[task4] Reaped child PID=26434 exit_code=11
+[task4] Child #2 done.
+[task4] Reaped child PID=26435 exit_code=12
+[task4] Parent done.

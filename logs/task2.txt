@@ -1,0 +1,6 @@
+[task2] Parent starting. PID=26425
+[task2] Parent waiting for child PID=26427 ...
+[task2] Child working... PID=26427
+[task2] Child exiting with code 42.
+[task2] Child finished normally. exit_code=42
+[task2] Parent done.
