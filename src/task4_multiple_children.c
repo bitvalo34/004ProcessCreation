@@ -20,7 +20,7 @@ static void sleep_ms(long ms) {
 int main(void) {
   setbuf(stdout, NULL);
 
-  pid_t kids[3];
+  pid_t kids[3]; /* save each child's PID so we can wait for them later */
 
   printf("[task4] Parent PID=%d creating 3 children...\n", (int)getpid());
 
@@ -29,21 +29,21 @@ int main(void) {
     if (pid < 0) die("fork");
 
     if (pid == 0) {
-      // Child
       printf("[task4] Child #%d started. PID=%d PPID=%d\n",
              i, (int)getpid(), (int)getppid());
 
-      // Different sleep per child so you can see different finish times.
+      /* stagger the sleeps so they finish at different times */
       sleep_ms(300 + i * 250);
 
       printf("[task4] Child #%d done.\n", i);
-      return 10 + i; // unique exit codes: 10,11,12
+      return 10 + i; /* each child exits with a unique code */
     }
 
+    /* only the parent gets here — children return above */
     kids[i] = pid;
   }
 
-  // Parent waits all
+  /* now reap all three children and print their exit codes */
   for (int i = 0; i < 3; i++) {
     int status = 0;
     pid_t w = waitpid(kids[i], &status, 0);

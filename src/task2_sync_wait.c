@@ -28,16 +28,19 @@ int main(void) {
   if (pid == 0) {
     printf("[task2] Child working... PID=%d\n", (int)getpid());
     sleep_ms(600);
+    /* Exit with 42 so the parent can verify it actually got the right code */
     printf("[task2] Child exiting with code 42.\n");
     return 42;
   }
 
+  /* This is the key difference from task1: we actually wait for the child */
   printf("[task2] Parent waiting for child PID=%d ...\n", (int)pid);
 
   int status = 0;
   pid_t w = waitpid(pid, &status, 0);
   if (w < 0) die("waitpid");
 
+  /* Check how the child exited — normally or killed by a signal */
   if (WIFEXITED(status)) {
     int code = WEXITSTATUS(status);
     printf("[task2] Child finished normally. exit_code=%d\n", code);

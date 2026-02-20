@@ -25,6 +25,10 @@ int main(void) {
 
   const size_t SIZE = 256;
 
+  /*
+   * IPC_PRIVATE gives us a unique key — works fine since
+   * only our fork'd child needs access to this segment.
+   */
   int shmid = shmget(IPC_PRIVATE, SIZE, IPC_CREAT | 0600);
   if (shmid < 0) die("shmget");
 
@@ -34,11 +38,11 @@ int main(void) {
   if (pid < 0) die("fork");
 
   if (pid == 0) {
-    // Child: attach + read
+    /* child attaches to the same shared memory segment */
     void *addr = shmat(shmid, NULL, 0);
     if (addr == (void *)-1) die("shmat(child)");
 
-    // Wait a bit so parent writes first
+    /* give the parent a moment to write first (not bulletproof, but fine for a demo) */
     sleep_ms(200);
 
     char local[256];
@@ -51,7 +55,7 @@ int main(void) {
     return 0;
   }
 
-  // Parent: attach + write
+  /* parent attaches and writes the message into shared memory */
   void *addr = shmat(shmid, NULL, 0);
   if (addr == (void *)-1) die("shmat(parent)");
 
@@ -59,13 +63,13 @@ int main(void) {
   snprintf((char *)addr, SIZE, "%s", msg);
   printf("[task5] Parent wrote message.\n");
 
-  // Let child read
+  /* wait for the child to finish reading before we clean up */
   int status = 0;
   waitpid(pid, &status, 0);
 
   if (shmdt(addr) < 0) die("shmdt(parent)");
 
-  // Mark segment for deletion (will be destroyed after last detach)
+  /* IPC_RMID marks it for deletion — the kernel frees it after the last detach */
   if (shmctl(shmid, IPC_RMID, NULL) < 0) die("shmctl(IPC_RMID)");
   printf("[task5] Parent marked segment for deletion.\n");
 
